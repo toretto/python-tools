@@ -17,6 +17,7 @@ print("#RESULTS \n")
 content = "<h2>Website Status Report</h2>"
 content += "<p>Below are the results of the website status check:</p>"
 
+#Replace dv.csv with full path when using Cronjobs
 with open('db.csv') as csvfile:
     csvreader = csv.reader(csvfile,delimiter=";")
 
