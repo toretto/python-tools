@@ -36,14 +36,17 @@ with open('db.csv') as csvfile:
             print (f'{bcolors.SUCC}{url} is alive. Checking Heartbeat code. {bcolors.ENDC}')
             # Adding to Mail Content
             content += (f'<p>{url} is alive. Checking Heartbeat code. </p>')
-            if  Heartbeat in r.text: 
-                print (f"{bcolors.SUCC}{url} Heartbeat found. {bcolors.ENDC}\n")
-                # Adding to Mail Content
-                content += (f"<p>{url} Heartbeat found.</p><br/>")
+            if Heartbeat == "":
+                print ("No heartbeat in database, skipping.\n")
             else:
-                print (f"{bcolors.FAIL}Heartbeat not found. Please check your page and DB connection. {bcolors.ENDC} \n")
-                # Adding to Mail Content
-                content += (f"<p>Heartbeat not found. Please check your page and DB connection. </p><br/>")
+                if  Heartbeat in r.text:
+                    print (f"{bcolors.SUCC}{url} Heartbeat found. {bcolors.ENDC}\n")
+                    # Adding to Mail Content
+                    content += (f"<p>{url} Heartbeat found.</p><br/>")
+                else:
+                    print (f"{bcolors.FAIL}Heartbeat not found. Please check your page and DB connection. {bcolors.ENDC} \n")
+                    # Adding to Mail Content
+                    content += (f"<p>Heartbeat not found. Please check your page and DB connection. </p><br/>")
         else: 
             print (f"{bcolors.FAIL}{url} appears to be down.\nNo Heartbeat for obvious reasons. {bcolors.ENDC}")
             # Adding to Mail Content
