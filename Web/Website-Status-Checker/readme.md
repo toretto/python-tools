@@ -15,3 +15,4 @@
 
 ## Running as Cronjob
 - To run the script as a cronjob, you'll need to provide the full path to db.csv e.g /home/hackerman/scripts/websitechecker/db.csv.
+- replace 'db.csv' in with open('db.csv) as csvfile with the appropriate path (hint: use the pwd command in Linux.)
