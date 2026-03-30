@@ -1,8 +1,8 @@
-# This Python script checks if a website is online and whether the Heartbeat phrase is found. 
+# This Python script checks if a website is online and whether the Heartbeat phrase is found.
 from re import X
 import requests
+from requests.exceptions import SSLError, ConnectionError, Timeout, RequestException
 import csv
-import socket
 import smtplib, ssl
 from email.message import EmailMessage
 
@@ -27,12 +27,23 @@ with open('db.csv') as csvfile:
         hostname = row [0]
         url = row[1]
         Heartbeat = row[2]
+        
+        # Improved version that catches SSL errors and timeouts
         try:
-            o = socket.gethostbyname(hostname)
-        except:
-            print (f"{bcolors.FAIL}Can\'t resolve the hostname {hostname}, skipping.{bcolors.ENDC}\n")
+            r = requests.get(url, timeout=10)
+        except SSLError:
+            print(f"{bcolors.FAIL}{url} SSL certificate error — skipping.{bcolors.ENDC}\n")
+            content += f"<p><strong>{url} SSL certificate error.</strong></p>"
             continue
-        r = requests.get(f'{url}')
+        except (ConnectionError, Timeout):
+            print(f"{bcolors.FAIL}{url} could not be reached — skipping.{bcolors.ENDC}\n")
+            content += f"<p><strong>{url} could not be reached.</strong></p>"
+            continue
+        except RequestException as e:
+            print(f"{bcolors.FAIL}{url} request failed: {e} — skipping.{bcolors.ENDC}\n")
+            content += f"<p><strong>{url} request failed: {e}</strong></p>"
+            continue
+
         # print (r.status_code)
         if r.status_code == 200: 
             print (f'{bcolors.SUCC}{url} is alive. Checking Heartbeat code. {bcolors.ENDC}')
